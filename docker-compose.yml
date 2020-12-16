@@ -1,0 +1,24 @@
+version: '3'
+services:
+  varnish:
+    build: ./
+    volumes:
+      - ./default.vcl:/etc/varnish/default.vcl:ro
+    tmpfs:
+      - /var/lib/varnish:exec
+    environment: 
+      FS_ENV_ID: YOUR_FLAGSHIP_ENV_ID
+      FS_API_KEY: YOUR_FLAGSHIP_API_KEY
+    ports:
+      - 8081:80
+    depends_on:
+      - example
+
+  example:
+    build:
+      context: ./example
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./example:/src/usr/app
+    working_dir: /src/usr/app
+    command: npm run dev
